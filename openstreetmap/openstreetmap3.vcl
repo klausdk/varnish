@@ -1,6 +1,5 @@
-# VCL script for varnish 4
+# VCL script for Varnish 3
 
-vcl 4.0;
 
 backend default {
   .host = "127.0.0.1";
@@ -26,37 +25,37 @@ backend c_tile {
 sub vcl_recv {
 
   if (req.http.host ~ "^a.tile") {
-    set req.backend_hint = a_tile;
+    set req.backend = a_tile;
   } else if (req.http.host ~ "^b.tile") {
-    set req.backend_hint = b_tile;
+    set req.backend = b_tile;
   } else if (req.http.host ~ "^c.tile") {
-    set req.backend_hint = c_tile;
+    set req.backend = c_tile;
   } else if (req.http.host ~ "^a.map") {
-    set req.backend_hint = a_tile;
+    set req.backend = a_tile;
   } else if (req.http.host ~ "^b.map") {
-    set req.backend_hint = b_tile;
+    set req.backend = b_tile;
   } else if (req.http.host ~ "^c.map") {
-    set req.backend_hint = c_tile;
+    set req.backend = c_tile;
   }
 
-  unset req.http.cookie;
+  remove req.http.cookie;
 
   // Cache everything
-  if (req.method == "GET") {
-    return (hash);
+  if (req.request == "GET") {
+    return (lookup);
   }
 
 
 }
 
-sub vcl_backend_response {
+sub vcl_fetch {
 
   // Cache tiles for 3 weeks
   set beresp.ttl = 3w;
 
   // Remove all cookies
-  unset beresp.http.set-cookie;
-  unset beresp.http.cookie;
+  remove beresp.http.set-cookie;
+  remove beresp.http.cookie;
 
 }
 
@@ -75,6 +74,7 @@ sub vcl_hash {
   // Cache using only url as a hash.  
   // This means if a.tile/1/1/1/tile.png is access, b.tile/1/1/1/tile.png will also be fetch from cache
   hash_data(req.url);
-  return (lookup);
+  return (hash);
 }
+
 
