@@ -2,6 +2,8 @@
 
 Make sure you have a tested vcl file that works with varnish 4
 
+requires stuff from epel repo
+
 Remove old version
 
 ```
@@ -16,7 +18,6 @@ rpm --nosignature -i https://repo.varnish-cache.org/redhat/varnish-4.0.el6.rpm
 ```
 
 
-# requires stuff from epel repo
 ```
 yum install varnish
 ```
