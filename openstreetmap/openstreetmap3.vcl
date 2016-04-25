@@ -72,7 +72,7 @@ sub vcl_deliver {
 sub vcl_hash {
 
   // Cache using only url as a hash.  
-  // This means if a.tile/1/1/1/tile.png is access, b.tile/1/1/1/tile.png will also be fetch from cache
+  // This means if a.tile/1/1/1/tile.png is accessed, b.tile/1/1/1/tile.png will also be fetch from cache
   hash_data(req.url);
   return (hash);
 }
