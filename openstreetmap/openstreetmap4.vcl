@@ -9,27 +9,30 @@ backend default {
 
 
 backend a_tile {
-  .host = "a.tile.openstreetmap.org";
+  .host = "151.101.2.217";
   .port = "80";
 }
 
 backend b_tile {
-  .host = "b.tile.openstreetmap.org";
+  .host = "151.101.66.217";
   .port = "80";
 }
 
 backend c_tile {
-  .host = "c.tile.openstreetmap.org";
+  .host = "151.101.130.217";
   .port = "80";
 }
 
 sub vcl_recv {
 
   if (req.http.host ~ "^a.tile") {
+    set req.http.host = "a.tile.openstreetmap.org";
     set req.backend_hint = a_tile;
   } else if (req.http.host ~ "^b.tile") {
+    set req.http.host = "b.tile.openstreetmap.org";
     set req.backend_hint = b_tile;
   } else if (req.http.host ~ "^c.tile") {
+    set req.http.host = "c.tile.openstreetmap.org";
     set req.backend_hint = c_tile;
   } else if (req.http.host ~ "^a.map") {
     set req.backend_hint = a_tile;
